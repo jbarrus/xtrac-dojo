@@ -1,0 +1,96 @@
+<!--
+  ~ Copyright (c) 2012 XTRAC LLC. All Rights Reserved.
+  ~
+  ~ This software and all information contained herein is the property of
+  ~ XTRAC LLC.  Any dissemination, disclosure, use, or reproduction of this
+  ~ material for any reason inconsistent with express purpose for which it
+  ~ has been disclosed is strictly forbidden.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jeffrey</groupId>
+    <artifactId>dojo-tdd</artifactId>
+    <packaging>pom</packaging>
+    <name>coding dojo tdd</name>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <scala.version>2.9.2</scala.version>
+        <junit.version>4.10</junit.version>
+        <scalatest.version>1.8</scalatest.version>
+        <maven.surefire.version>2.11</maven.surefire.version>
+        <maven.scala.version>2.15.2</maven.scala.version>
+        <maven.compiler.version>2.5.1</maven.compiler.version>
+    </properties>
+
+    <dependencies>
+        <!-- scala -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+		
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.version}</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+
+        <plugins>
+
+            <!-- the Maven compiler plugin will compile Java source files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <argLine>-Xmx512m</argLine>
+                    <includes>
+                        <include>**/*Unit.scala</include>
+                        <include>**/*Spec.scala</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!-- the Maven Scala plugin will compile Scala source files -->
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>${maven.scala.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,4 +1,4 @@
-package com.xtrac.design.conversion.common.bowling
+package com.jeffrey.bowling
 
 class BowlingGame
 {
