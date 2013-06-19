@@ -9,44 +9,31 @@ class Customer(val name: String) {
         rentals += rental
     }
 
-    def statement: String = {
-        var result: String = "Rental Record for " + name + "\n"
-        var totalAmount: Double = 0
-        var frequentRenterPoints: Int = 0
-
-        rentals.foreach(each => {
-            var thisAmount: Double = 0;
-
-            each.movie.priceCode match {
-                case PriceCode.REGULAR => {
-                    thisAmount += 2
-                    if (each.daysRented > 2)
-                        thisAmount += (each.daysRented - 2) * 1.5
-                }
-                case PriceCode.NEW_RELEASE => {
-                    thisAmount += each.daysRented * 3
-                }
-                case PriceCode.CHILDRENS => {
-                    thisAmount += 1.5
-                    if (each.daysRented > 3)
-                        thisAmount += (each.daysRented - 3) * 1.5
-                }
+    def calculateFrequentRenterPoints = {
+        rentals.foldLeft(0)((total, rental) => {
+            if (rental.movie.priceCode == PriceCode.NEW_RELEASE && rental.daysRented > 1) {
+                total + 2
+            } else {
+                total + 1
             }
-
-            frequentRenterPoints += 1
-
-            if (each.movie.priceCode == PriceCode.NEW_RELEASE && each.daysRented > 1)
-                frequentRenterPoints += 1
-
-            result += "\t" + each.movie.title + "\t" + thisAmount + "\n";
-
-            totalAmount += thisAmount;
         })
+    }
 
-        result += "You owed " + totalAmount + "\n"
-        result += "You earned " + frequentRenterPoints + " frequent renter points\n"
+    def calculateTotalCharge = {
+        rentals.foldLeft(0.0)(_ + _.calculateCharge)
+    }
 
-        println(result)
-        result
+    def calculateLineItems: List[String] = {
+        rentals.foldRight(List[String]())((rental, lines) => {
+            val line: String = "\t" + rental.movie.title + "\t" + rental.calculateCharge
+            line :: lines
+        })
+    }
+
+    def statement: String = {
+        "Rental Record for " + name + "\n" +
+                calculateLineItems.mkString("\n") + "\n" +
+                "You owed " + calculateTotalCharge + "\n" +
+                "You earned " + calculateFrequentRenterPoints + " frequent renter points\n"
     }
 }
